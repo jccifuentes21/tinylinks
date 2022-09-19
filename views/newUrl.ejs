@@ -7,10 +7,12 @@
 
     <main style="margin: 1em">
       <h3>Create TinyURL</h3>
-      <form class="form-inline">
+      <form class="form-inline" method="post" action="/newUrl">
         <div class="form-group mb-2">
           <label for="longURL">Enter a URL:</label>
           <input
+            name="longURL"
+            id="longURL"
             class="form-control"
             type="text"
             placeholder="http://"
