@@ -2,10 +2,11 @@
 
 const postNewUrl = async (req, res) => {
   const body = req.body;
+  const generatedId = generateRandomString(6);
   console.log("body", body);
-  const newUrl = { ...req.body, id: generateRandomString(6),};
+  const newUrl = { ...req.body, id: generatedId, shortUrl: generatedId };
   console.log("newUrl", newUrl);
-  res.redirect("/urls");
+  res.render("urls", { title: 'Urls'});
 };
 
 const generateRandomString = (myLength) => {
