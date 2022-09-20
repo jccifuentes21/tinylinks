@@ -1,5 +1,6 @@
 // urls functions
 const fs = require("fs");
+const urls = require("../models/urls.json");
 
 const postNewUrl = async (req, res) => {
 	const body = req.body;
@@ -13,9 +14,8 @@ const postNewUrl = async (req, res) => {
 			}
 		});
 	});
-	res.render("urls", { title: "Urls" });
+	res.redirect("/urls");
 };
-
 
 const generateRandomString = (myLength) => {
 	const chars =
@@ -29,4 +29,8 @@ const generateRandomString = (myLength) => {
 	return randomString;
 };
 
-module.exports = { postNewUrl };
+const showUrls = (req, res) => {
+	res.render("urls", { title: "Urls", urls: Object.values(urls) });
+};
+
+module.exports = { postNewUrl, showUrls };
