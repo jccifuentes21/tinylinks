@@ -23,8 +23,10 @@
           <form>
             <button type="submit" class="btn btn-danger">Logout</button>
           </form>
-          <a class="nav-item nav-link">Login</a>
-          <a class="nav-item nav-link">Register</a>
+          <% if(!isLoggedIn) {%>
+            <a href="/auth/login" class="nav-item nav-link">Login</a>
+            <a href="/auth/register" class="nav-item nav-link">Register</a>
+          <% } %>
         </div>
       </div>
     </div>
