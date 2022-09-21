@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router;
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const { postNewUrl, showUrls, deleteUrl } = require("./controllers/urls");
+const { postNewUrl, showUrls, deleteUrl , showNewUrl } = require("./controllers/urls");
 const fs = require("fs");
 
 const app = express();
@@ -16,9 +16,6 @@ app.get("/login", (req, res) => {
 	res.render("login", { title: "Login" });
 });
 
-app.get("/newUrl", (req, res) => {
-	res.render("newUrl", { title: "New Url" });
-});
 
 app.get("/register", (req, res) => {
 	res.render("register", { title: "Register" });
@@ -28,7 +25,8 @@ app.get("/singleUrl", (req, res) => {
 	res.render("singleUrl", { title: "Url" });
 });
 
-app.post("/newUrl", postNewUrl);
+app.get("/urls/new", showNewUrl),
+app.post("/urls/new", postNewUrl);
 app.get("/urls", showUrls);
 app.get("/", showUrls);
 app.post("/delete/:id", deleteUrl);

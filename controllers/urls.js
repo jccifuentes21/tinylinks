@@ -48,4 +48,8 @@ const showUrls = (req, res) => {
 	});
 };
 
-module.exports = { postNewUrl, showUrls, deleteUrl };
+const showNewUrl = (req, res) => {
+    res.render("newUrl", { title: "New Url" });
+};
+
+module.exports = { postNewUrl, showUrls, deleteUrl, showNewUrl };
