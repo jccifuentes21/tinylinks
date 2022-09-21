@@ -19,10 +19,18 @@
 				<tbody>
 					<% urls.forEach(url => { %>
 					<tr>
-						<td><a href="<%= url.longUrl %>"><%= url.shortUrl %></a></td>
+						<td>
+							<a href="<%= url.longUrl %>"><%= url.shortUrl %></a>
+						</td>
 						<td><%= url.longUrl %></td>
-						<td><a class="btn btn-primary">Edit</a></td>
-						<td><button class="btn btn-danger">Delete</button></td>
+						<td>
+							<a class="btn btn-primary">Edit</a>
+						</td>
+						<td>
+							<form action="/delete/<%= url.shortUrl %>" method="POST">
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
 						<% }) %>
 					</tr>
 				</tbody>

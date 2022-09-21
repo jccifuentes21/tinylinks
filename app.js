@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router;
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const { postNewUrl, showUrls } = require("./controllers/urls");
+const { postNewUrl, showUrls, deleteUrl } = require("./controllers/urls");
 const fs = require("fs");
 
 const app = express();
@@ -31,3 +31,18 @@ app.get("/singleUrl", (req, res) => {
 app.post("/newUrl", postNewUrl);
 app.get("/urls", showUrls);
 app.get("/", showUrls);
+app.post("/delete/:id", deleteUrl);
+
+
+// app.post("/delete/:id", (req, res) => {
+//   fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+//     const userData = JSON.parse(data.toString());
+//     delete userData[req.params.id];
+//     fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+//       if (err) {
+//         console.log(err);
+//       }
+//     });
+//   });
+//   res.redirect("/urls");
+// });

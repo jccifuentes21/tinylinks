@@ -17,6 +17,19 @@ const postNewUrl = async (req, res) => {
 	res.redirect("/urls");
 };
 
+const deleteUrl = (req, res) => {
+	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+		const userData = JSON.parse(data.toString());
+		delete userData[req.params.id];
+		fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+			if (err) {
+				console.log(err);
+			}
+		});
+	});
+	res.redirect("/urls");
+};
+
 const generateRandomString = (myLength) => {
 	const chars =
 		"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
@@ -33,4 +46,4 @@ const showUrls = (req, res) => {
 	res.render("urls", { title: "Urls", urls: Object.values(urls) });
 };
 
-module.exports = { postNewUrl, showUrls };
+module.exports = { postNewUrl, showUrls, deleteUrl };
