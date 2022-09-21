@@ -1,9 +1,8 @@
 // urls functions
 const fs = require("fs");
-const urls = require("../models/urls.json");
+// const urls = require("../models/urls.json");
 
 const postNewUrl = async (req, res) => {
-	const body = req.body;
 	const generatedId = generateRandomString(6);
 	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
 		const userData = JSON.parse(data.toString());
@@ -12,9 +11,9 @@ const postNewUrl = async (req, res) => {
 			if (err) {
 				console.log(err);
 			}
+			res.redirect("/urls");
 		});
 	});
-	res.redirect("/urls");
 };
 
 const deleteUrl = (req, res) => {
@@ -25,9 +24,9 @@ const deleteUrl = (req, res) => {
 			if (err) {
 				console.log(err);
 			}
+			res.redirect("/urls");
 		});
 	});
-	res.redirect("/urls");
 };
 
 const generateRandomString = (myLength) => {
@@ -43,7 +42,10 @@ const generateRandomString = (myLength) => {
 };
 
 const showUrls = (req, res) => {
-	res.render("urls", { title: "Urls", urls: Object.values(urls) });
+	fs.readFile("./models/urls.json", (err, data) => {
+		const urls = JSON.parse(data);
+		res.render("urls", { title: "Urls", urls: Object.values(urls) });
+	});
 };
 
 module.exports = { postNewUrl, showUrls, deleteUrl };
