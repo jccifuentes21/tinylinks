@@ -19,7 +19,7 @@
 				<tbody>
 					<% urls.forEach(url => { %>
 					<tr>
-						<td><a href="longUrl"><%= url.shortUrl %></a></td>
+						<td><a href="<%= url.longUrl %>"><%= url.shortUrl %></a></td>
 						<td><%= url.longUrl %></td>
 						<td><a class="btn btn-primary">Edit</a></td>
 						<td><button class="btn btn-danger">Delete</button></td>
