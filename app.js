@@ -1,5 +1,4 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const cookieSession = require('cookie-session')
 const authRoutes = require("./routes/authRoutes");
 const morgan = require('morgan')
@@ -21,21 +20,62 @@ app.use("/auth", authRoutes);
 app.listen(3000);
 
 app.get("/", (req, res) => {
-  res.render("urls", { title: "Urls" });
+  let isLoggedIn;
+  let user
+  if(req.session.user){
+    isLoggedIn = true
+    user = req.session.user
+    res.redirect('/urls')
+  } else {
+    isLoggedIn = false
+    res.redirect('/auth/login')
+  }
 });
 
 app.get("/newUrl", (req, res) => {
-  res.render("newUrl", { title: "New Url" });
+  let isLoggedIn;
+  let user
+  if(req.session.user){
+    isLoggedIn = true
+    user = req.session.user
+  } else {
+    isLoggedIn = false
+  }
+  res.render("newUrl", { title: "New Url", isLoggedIn, user });
 });
 
 app.get("/register", (req, res) => {
-  res.render("register", { title: "Register" });
+  let isLoggedIn;
+  let user
+  if(req.session.user){
+    isLoggedIn = true
+    user = req.session.user
+  } else {
+    isLoggedIn = false
+  }
+  res.render("register", { title: "Register", isLoggedIn, user });
 });
 
 app.get("/singleUrl", (req, res) => {
-  res.render("singleUrl", { title: "Url" });
+  let isLoggedIn;
+  let user
+  if(req.session.user){
+    isLoggedIn = true
+    user = req.session.user
+  } else {
+    isLoggedIn = false
+  }
+  res.render("singleUrl", { title: "Url", isLoggedIn, user });
 });
 
 app.get("/urls", (req, res) => {
-  res.render("urls", { title: "Urls" });
+  let isLoggedIn;
+  let user
+  if(req.session.user){
+    isLoggedIn = true
+    user = req.session.user
+  } else {
+    isLoggedIn = false
+  }
+  res.render("urls", { title: "Urls", isLoggedIn, user });
 });
