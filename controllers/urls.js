@@ -1,6 +1,5 @@
 // urls functions
 const fs = require("fs");
-// const urls = require("../models/urls.json");
 
 const postNewUrl = async (req, res) => {
 	const generatedId = generateRandomString(6);
@@ -49,7 +48,31 @@ const showUrls = (req, res) => {
 };
 
 const showNewUrl = (req, res) => {
-    res.render("newUrl", { title: "New Url" });
+	res.render("newUrl", { title: "New Url" });
 };
 
-module.exports = { postNewUrl, showUrls, deleteUrl, showNewUrl };
+const showSingleUrl = (req, res) => {
+    const data = JSON.parse(fs.readFileSync('./models/urls.json', 'utf8'));
+    res.render("singleUrl", { title: "Url", id: req.params.id, long: data[req.params.id].longUrl });
+};
+
+const editUrl = (req, res) => {
+    fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+        const userData = JSON.parse(data.toString());
+        userData[req.params.id].longUrl = req.body.longUrl;
+        fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.redirect("/urls");
+        });
+    });
+};
+
+const getLongUrl = (req, res) => {
+    const test = JSON.parse(fs.readFileSync('./models/urls.json', 'utf8'));
+    return test[req].longUrl;
+}
+
+
+module.exports = { postNewUrl, showUrls, deleteUrl, showNewUrl, showSingleUrl, editUrl, getLongUrl };
