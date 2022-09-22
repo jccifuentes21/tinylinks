@@ -52,27 +52,38 @@ const showNewUrl = (req, res) => {
 };
 
 const showSingleUrl = (req, res) => {
-    const data = JSON.parse(fs.readFileSync('./models/urls.json', 'utf8'));
-    res.render("singleUrl", { title: "Url", id: req.params.id, long: data[req.params.id].longUrl });
+	const data = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+	res.render("singleUrl", {
+		title: "Url",
+		id: req.params.id,
+		long: data[req.params.id].longUrl,
+	});
 };
 
 const editUrl = (req, res) => {
-    fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-        const userData = JSON.parse(data.toString());
-        userData[req.params.id].longUrl = req.body.longUrl;
-        fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
-            if (err) {
-                console.log(err);
-            }
-            res.redirect("/urls");
-        });
-    });
+	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+		const userData = JSON.parse(data.toString());
+		userData[req.params.id].longUrl = req.body.longUrl;
+		fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect("/urls");
+		});
+	});
 };
 
 const getLongUrl = (req, res) => {
-    const test = JSON.parse(fs.readFileSync('./models/urls.json', 'utf8'));
-    return test[req].longUrl;
-}
+	const url = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+	return url[req].longUrl;
+};
 
-
-module.exports = { postNewUrl, showUrls, deleteUrl, showNewUrl, showSingleUrl, editUrl, getLongUrl };
+module.exports = {
+	postNewUrl,
+	showUrls,
+	deleteUrl,
+	showNewUrl,
+	showSingleUrl,
+	editUrl,
+	getLongUrl,
+};

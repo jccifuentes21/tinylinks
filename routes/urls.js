@@ -6,8 +6,8 @@ const {
 	showUrls,
 	deleteUrl,
 	showNewUrl,
-    showSingleUrl,
-    editUrl,
+	showSingleUrl,
+	editUrl,
 } = require("../controllers/urls");
 
 router.post("/urls/new", postNewUrl);
@@ -17,6 +17,5 @@ router.get("/", showUrls);
 router.post("/delete/:id", deleteUrl);
 router.get("/url/:id", showSingleUrl);
 router.post("/url/:id", editUrl);
-
 
 module.exports = router;
