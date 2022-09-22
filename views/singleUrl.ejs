@@ -6,26 +6,35 @@
 		<%- include('./partials/header.ejs') %>
 
 		<div class="card text-center">
-
 			<div class="card-header"></div>
 			<div class="card-body">
-				<h5 class="card-title">TinyURL for: </h5>
-        <p> <%= long %> </p>
+				<h5 class="card-title">TinyURL for:</h5>
+				<p><%= long %></p>
 				<p class="card-text">
 					Short URL ID: <a href="<%= long %>"> <%= id %> </a>
 				</p>
 			</div>
+			<h5 class="card-title">TinyURL:</h5>
+			<p>
+				<a href="http://localhost:3000/urls/u/<%= id %>"
+					>http://localhost:3000/urls/u/<%= id %></a
+				>
+			</p>
 			<div>
 				<h5>Edit</h5>
 				<form method="post" action="/urls/<%= id %>">
 					<label for="updatedUrl">New URL:</label>
-					<input type="text" placeholder="Input the new URL" value="<%= long %>" name="longUrl" id="longUrl" />
+					<input
+						type="text"
+						placeholder="Input the new URL"
+						value="<%= long %>"
+						name="longUrl"
+						id="longUrl"
+					/>
 					<button type="submit" class="btn btn-primary">Edit</button>
 				</form>
 			</div>
 			<div class="card-footer text-muted"></div>
-
 		</div>
-
 	</body>
 </html>

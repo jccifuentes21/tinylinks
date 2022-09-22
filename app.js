@@ -6,9 +6,9 @@ const {
 	showUrls,
 	deleteUrl,
 	showNewUrl,
-  showSingleUrl,
-  editUrl,
-  getLongUrl
+	showSingleUrl,
+	editUrl,
+	getLongUrl,
 } = require("./controllers/urls");
 
 const app = express();
@@ -33,8 +33,6 @@ app.post("/delete/:id", deleteUrl);
 app.get("/urls/:id", showSingleUrl);
 app.post("/urls/:id", editUrl);
 app.get("/urls/u/:id", (req, res) => {
-  const shortedUrl = getLongUrl(req.params.id);
-  res.redirect(shortedUrl);
+	const shortedUrl = getLongUrl(req.params.id);
+	res.redirect(shortedUrl);
 });
-
-
