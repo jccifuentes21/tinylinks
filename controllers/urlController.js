@@ -62,12 +62,12 @@ const showUrls = (req, res) => {
   fs.readFile("./models/urls.json", (err, data) => {
     const urls = JSON.parse(data);
     let userUrls;
-    if (urls [req.session.user]) {
-      userUrls = Object.values(urls[req.session.user.id]);
-    } else {
-      userUrls = [];
-    }
     if (req.session.user) {
+      if (urls[req.session.user.id]) {
+        userUrls = Object.values(urls[req.session.user.id]);
+      } else {
+        userUrls = [];
+      }
       res.render("urls", {
         title: "Urls",
         urls: userUrls,
