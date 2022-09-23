@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('./partials/head.ejs') %>
+	<%- include('./partials/head.ejs') %>
 
-  <body>
-    <%- include('./partials/header.ejs') %>
+	<body>
+		<%- include('./partials/header.ejs') %>
 
-    <main style="margin: 1em">
-      <h3>My URLs</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Short URL ID</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">2</th>
-            <td>https://www.google.com</td>
-            <td><a class="btn btn-primary">Edit</a></td>
-            <td><button class="btn btn-danger">Delete</button></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>https://www.facebook.com</td>
-            <td><a class="btn btn-primary">Edit</a></td>
-            <td><button class="btn btn-danger">Delete</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </main>
-    <%- include('./partials/scripts.ejs') %>
-  </body>
+		<main style="margin: 1em">
+			<h3>My URLs</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Short URL ID</th>
+						<th scope="col">Long URL</th>
+						<th scope="col">Edit</th>
+						<th scope="col">Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% urls.forEach(url => { %>
+					<tr>
+						<td>
+							<a href="<%= url.longUrl %>"><%= url.shortUrl %></a>
+						</td>
+						<td><%= url.longUrl %></td>
+						<td>
+							<a class="btn btn-primary" href="urls/url/<%= url.shortUrl %>"
+								>Edit</a
+							>
+						</td>
+						<td>
+							<form action="urls/delete/<%= url.shortUrl %>" method="POST">
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
+						<% }) %>
+					</tr>
+				</tbody>
+			</table>
+		</main>
+		<%- include('./partials/scripts.ejs') %>
+	</body>
 </html>
