@@ -6,7 +6,10 @@ const postNewUrl = async (req, res) => {
     const generatedId = generateRandomString(6);
     fs.readFile("./models/urls.json", "utf-8", (err, data) => {
       const userData = JSON.parse(data.toString());
-      userData[req.session.user.id] = {...userData[req.session.user.id], [generatedId] : { shortUrl: generatedId, ...req.body }};
+      userData[req.session.user.id] = {
+        ...userData[req.session.user.id],
+        [generatedId]: { shortUrl: generatedId, ...req.body },
+      };
       fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
         if (err) {
           console.log(err);
@@ -141,9 +144,17 @@ const editUrl = (req, res) => {
 
 const getLongUrl = (shortedUrl, userId) => {
   const allData = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
-  const url = allData[userId]
+  const url = allData[userId];
+  let returnUrl;
   if (url[shortedUrl]) {
-    return url[shortedUrl].longUrl;
+    if (
+      url[shortedUrl].longUrl.startsWith("http://") ||
+      url[shortedUrl].longUrl.startsWith("https://")
+    ) {
+      return url[shortedUrl].longUrl;
+    } else {
+      return `//${url[shortedUrl].longUrl}`
+    }
   } else {
     return false;
   }

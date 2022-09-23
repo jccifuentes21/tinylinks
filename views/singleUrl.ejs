@@ -11,12 +11,13 @@
 				<h5 class="card-title">TinyURL for:</h5>
 				<p><%= long %></p>
 				<p class="card-text">
-					Short URL ID: <a href="<%= long %>"> <%= id %> </a>
+					Short URL ID: <a href="<%= long.startsWith("http://") || long.startsWith('https://') ? long : ('//'+long)  %>" target="_blank"> <%= id %> </a>
 				</p>
 			</div>
 			<h5 class="card-title">TinyURL:</h5>
 			<p>
 				<a href="http://localhost:3000/urls/u/<%= id %>"
+					target="_blank"
 					>http://localhost:3000/urls/u/<%= id %></a
 				>
 			</p>
