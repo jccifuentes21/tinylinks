@@ -6,7 +6,7 @@ const postNewUrl = async (req, res) => {
     const generatedId = generateRandomString(6);
     fs.readFile("./models/urls.json", "utf-8", (err, data) => {
       const userData = JSON.parse(data.toString());
-      userData[generatedId] = { shortUrl: generatedId, ...req.body };
+      userData[req.session.user.id] = {...userData[req.session.user.id], [generatedId] : { shortUrl: generatedId, ...req.body }};
       fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
         if (err) {
           console.log(err);
@@ -26,9 +26,11 @@ const postNewUrl = async (req, res) => {
 const deleteUrl = (req, res) => {
   if (req.session.user) {
     fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-      const userData = JSON.parse(data.toString());
+      const allData = JSON.parse(data.toString());
+      const userData = allData[req.session.user.id];
       delete userData[req.params.id];
-      fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+      allData[req.session.user.id] = userData;
+      fs.writeFile("./models/urls.json", JSON.stringify(allData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -59,10 +61,16 @@ const generateRandomString = (myLength) => {
 const showUrls = (req, res) => {
   fs.readFile("./models/urls.json", (err, data) => {
     const urls = JSON.parse(data);
+    let userUrls;
+    if (urls [req.session.user.id]) {
+      userUrls = Object.values(urls[req.session.user.id]);
+    } else {
+      userUrls = [];
+    }
     if (req.session.user) {
       res.render("urls", {
         title: "Urls",
-        urls: Object.values(urls),
+        urls: userUrls,
         isLoggedIn: true,
         user: req.session.user,
       });
@@ -91,10 +99,11 @@ const showNewUrl = (req, res) => {
 const showSingleUrl = (req, res) => {
   if (req.session.user) {
     const data = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+    const userData = data[req.session.user.id];
     res.render("singleUrl", {
       title: "Url",
       id: req.params.id,
-      long: data[req.params.id].longUrl,
+      long: userData[req.params.id].longUrl,
       user: req.session.user,
       isLoggedIn: true,
     });
@@ -110,9 +119,11 @@ const showSingleUrl = (req, res) => {
 const editUrl = (req, res) => {
   if (req.session.user) {
     fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-      const userData = JSON.parse(data.toString());
+      const allData = JSON.parse(data.toString());
+      const userData = allData[req.session.user.id];
       userData[req.params.id].longUrl = req.body.longUrl;
-      fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+      allData[req.session.user.id] = userData;
+      fs.writeFile("./models/urls.json", JSON.stringify(allData), (err) => {
         if (err) {
           console.log(err);
         }
@@ -128,8 +139,9 @@ const editUrl = (req, res) => {
   }
 };
 
-const getLongUrl = (shortedUrl) => {
-  const url = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+const getLongUrl = (shortedUrl, userId) => {
+  const allData = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+  const url = allData[userId]
   if (url[shortedUrl]) {
     return url[shortedUrl].longUrl;
   } else {
@@ -139,7 +151,7 @@ const getLongUrl = (shortedUrl) => {
 
 const shortedUrl = (req, res) => {
   if (req.session.user) {
-    const shortedUrl = getLongUrl(req.params.id);
+    const shortedUrl = getLongUrl(req.params.id, req.session.user.id);
     if (shortedUrl === false) {
       res.status(404).send("Error! This ID does not exist!");
     } else {

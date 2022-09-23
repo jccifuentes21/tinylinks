@@ -1,6 +1,7 @@
 // auth functions
 const fs = require("fs").promises;
 const bcrypt = require("bcrypt");
+const uuid = require("uuid");
 
 const showLogin = (req, res) => {
   if (req.session.user) {
