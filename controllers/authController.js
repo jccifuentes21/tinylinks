@@ -1,8 +1,4 @@
 // auth functions
-// const users = require("../models/users.json");
-const bcrypt = require("bcrypt");
-const express = require("express");
-const uuid = require("uuid");
 const fs = require("fs").promises;
 
 const showLogin = (req, res) => {
@@ -46,7 +42,6 @@ const registerUser = async (req, res) => {
       users[newUser.id] = newUser;
       fs.writeFile("./models/users.json", JSON.stringify(users));
       req.session.user = newUser;
-      console.log(req.session);
       res.redirect("/urls");
     } else {
       res.render("userRegistered", { title: "Error", isLoggedIn: false });
@@ -61,18 +56,16 @@ const login = async (req, res) => {
   const usersJSON = await fs.readFile('./models/users.json');
   const users = JSON.parse(usersJSON)
   const selectedUser = Object.values(users).find(user => user.email === email);
-  console.log(selectedUser)
   try {
     if(selectedUser){
       if( await bcrypt.compare(password, selectedUser.password)){
         req.session.user = selectedUser;
-        console.log('User correctly logged in')
         res.redirect('/urls')
       } else {
-        res.render('loginError', {title: "Login Error", errMsg: "Wrong password! Please try again", isLoggedIn: false})
+        res.render('loginError', {title: "Login Error", errMsg: "Login Error! Please try again", isLoggedIn: false})
       }
     } else {
-      res.render('loginError', {title: "Login Error", errMsg: "Email not found! Please try again", isLoggedIn: false})
+      res.render('loginError', {title: "Login Error", errMsg: "Error! Please try again", isLoggedIn: false})
     }
   } catch (err) {
     console.log('error', err)
