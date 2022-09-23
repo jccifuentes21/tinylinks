@@ -1,5 +1,6 @@
 // auth functions
 const fs = require("fs").promises;
+const bcrypt = require("bcrypt");
 
 const showLogin = (req, res) => {
   if (req.session.user) {
@@ -52,29 +53,39 @@ const registerUser = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const {email, password} = req.body;
-  const usersJSON = await fs.readFile('./models/users.json');
-  const users = JSON.parse(usersJSON)
-  const selectedUser = Object.values(users).find(user => user.email === email);
+  const { email, password } = req.body;
+  const usersJSON = await fs.readFile("./models/users.json");
+  const users = JSON.parse(usersJSON);
+  const selectedUser = Object.values(users).find(
+    (user) => user.email === email
+  );
   try {
-    if(selectedUser){
-      if( await bcrypt.compare(password, selectedUser.password)){
+    if (selectedUser) {
+      if (await bcrypt.compare(password, selectedUser.password)) {
         req.session.user = selectedUser;
-        res.redirect('/urls')
+        res.redirect("/urls");
       } else {
-        res.render('loginError', {title: "Login Error", errMsg: "Login Error! Please try again", isLoggedIn: false})
+        res.render("ErrPage", {
+          title: "Login Error",
+          message: "Login Error! Please try again",
+          isLoggedIn: false,
+        });
       }
     } else {
-      res.render('loginError', {title: "Login Error", errMsg: "Error! Please try again", isLoggedIn: false})
+      res.render("ErrPage", {
+        title: "Login Error",
+        message: "Error! Please try again",
+        isLoggedIn: false,
+      });
     }
   } catch (err) {
-    console.log('error', err)
+    console.log("error", err);
   }
 };
 
 const logout = (req, res) => {
   req.session = null;
-  res.redirect('/auth/login')
+  res.redirect("/auth/login");
 };
 
 module.exports = {
@@ -82,5 +93,5 @@ module.exports = {
   showRegister,
   registerUser,
   login,
-  logout
+  logout,
 };
