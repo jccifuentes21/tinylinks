@@ -2,94 +2,164 @@
 const fs = require("fs");
 
 const postNewUrl = async (req, res) => {
-	const generatedId = generateRandomString(6);
-	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-		const userData = JSON.parse(data.toString());
-		userData[generatedId] = { shortUrl: generatedId, ...req.body };
-		fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect("/urls");
-		});
-	});
+  if (req.session.user) {
+    const generatedId = generateRandomString(6);
+    fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+      const userData = JSON.parse(data.toString());
+      userData[generatedId] = { shortUrl: generatedId, ...req.body };
+      fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/urls");
+      });
+    });
+  } else {
+    res.render("ErrPage", {
+      title: "Error!",
+      message: "Please log in to view this page",
+      isLoggedIn: false,
+    });
+  }
 };
 
 const deleteUrl = (req, res) => {
-	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-		const userData = JSON.parse(data.toString());
-		delete userData[req.params.id];
-		fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect("/urls");
-		});
-	});
+  if (req.session.user) {
+    fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+      const userData = JSON.parse(data.toString());
+      delete userData[req.params.id];
+      fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/urls");
+      });
+    });
+  } else {
+    res.render("ErrPage", {
+      title: "Error",
+      message: "Please login to view this page!",
+      isLoggedIn: false,
+    });
+  }
 };
 
 const generateRandomString = (myLength) => {
-	const chars =
-		"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
-	const randomArray = Array.from(
-		{ length: myLength },
-		(v, k) => chars[Math.floor(Math.random() * chars.length)]
-	);
+  const chars =
+    "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
+  const randomArray = Array.from(
+    { length: myLength },
+    (v, k) => chars[Math.floor(Math.random() * chars.length)]
+  );
 
-	const randomString = randomArray.join("");
-	return randomString;
+  const randomString = randomArray.join("");
+  return randomString;
 };
 
 const showUrls = (req, res) => {
-	fs.readFile("./models/urls.json", (err, data) => {
-		const urls = JSON.parse(data);
-		res.render("urls", { title: "Urls", urls: Object.values(urls) });
-	});
+  fs.readFile("./models/urls.json", (err, data) => {
+    const urls = JSON.parse(data);
+    if (req.session.user) {
+      res.render("urls", {
+        title: "Urls",
+        urls: Object.values(urls),
+        isLoggedIn: true,
+        user: req.session.user,
+      });
+    } else {
+      res.render("ErrPage", {
+        title: "Error",
+        message: "Please login to view this page!",
+        isLoggedIn: false,
+      });
+    }
+  });
 };
 
 const showNewUrl = (req, res) => {
-	res.render("newUrl", { title: "New Url" });
+  if (req.session.user) {
+    res.render("newUrl", {
+      title: "New Url",
+      isLoggedIn: true,
+      user: req.session.user,
+    });
+  } else {
+    res.redirect("/auth/login");
+  }
 };
 
 const showSingleUrl = (req, res) => {
-	const data = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
-	res.render("singleUrl", {
-		title: "Url",
-		id: req.params.id,
-		long: data[req.params.id].longUrl,
-	});
+  if (req.session.user) {
+    const data = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+    res.render("singleUrl", {
+      title: "Url",
+      id: req.params.id,
+      long: data[req.params.id].longUrl,
+      user: req.session.user,
+      isLoggedIn: true,
+    });
+  } else {
+    res.render("ErrPage", {
+      title: "Error",
+      message: "Please log in to view this page",
+      isLoggedIn: false,
+    });
+  }
 };
 
 const editUrl = (req, res) => {
-	fs.readFile("./models/urls.json", "utf-8", (err, data) => {
-		const userData = JSON.parse(data.toString());
-		userData[req.params.id].longUrl = req.body.longUrl;
-		fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect("/urls");
-		});
-	});
+  if (req.session.user) {
+    fs.readFile("./models/urls.json", "utf-8", (err, data) => {
+      const userData = JSON.parse(data.toString());
+      userData[req.params.id].longUrl = req.body.longUrl;
+      fs.writeFile("./models/urls.json", JSON.stringify(userData), (err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/urls");
+      });
+    });
+  } else {
+    res.render("ErrPage", {
+      title: "Error!",
+      message: "Please log in to view this page",
+      isLoggedIn: false,
+    });
+  }
 };
 
-const getLongUrl = (req, res) => {
-	const url = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
-	return url[req].longUrl;
+const getLongUrl = (shortedUrl) => {
+  const url = JSON.parse(fs.readFileSync("./models/urls.json", "utf8"));
+  if (url[shortedUrl]) {
+    return url[shortedUrl].longUrl;
+  } else {
+    return false;
+  }
 };
 
 const shortedUrl = (req, res) => {
-	const shortedUrl = getLongUrl(req.params.id);
-	res.redirect(shortedUrl);
-}
+  if (req.session.user) {
+    const shortedUrl = getLongUrl(req.params.id);
+    if (shortedUrl === false) {
+      res.status(404).send("Error! This ID does not exist!");
+    } else {
+      res.redirect(shortedUrl);
+    }
+  } else {
+    res.render("ErrPage", {
+      title: "Error!",
+      message: "Please log in to view this page",
+      isLoggedIn: false,
+    });
+  }
+};
 
 module.exports = {
-	postNewUrl,
-	showUrls,
-	deleteUrl,
-	showNewUrl,
-	showSingleUrl,
-	editUrl,
-	getLongUrl,
-	shortedUrl,
+  postNewUrl,
+  showUrls,
+  deleteUrl,
+  showNewUrl,
+  showSingleUrl,
+  editUrl,
+  shortedUrl,
 };
