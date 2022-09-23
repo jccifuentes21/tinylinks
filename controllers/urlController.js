@@ -78,6 +78,11 @@ const getLongUrl = (req, res) => {
 	return url[req].longUrl;
 };
 
+const shortedUrl = (req, res) => {
+	const shortedUrl = getLongUrl(req.params.id);
+	res.redirect(shortedUrl);
+}
+
 module.exports = {
 	postNewUrl,
 	showUrls,
@@ -86,4 +91,5 @@ module.exports = {
 	showSingleUrl,
 	editUrl,
 	getLongUrl,
+	shortedUrl,
 };

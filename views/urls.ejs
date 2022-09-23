@@ -24,12 +24,12 @@
 						</td>
 						<td><%= url.longUrl %></td>
 						<td>
-							<a class="btn btn-primary" href="urls/<%= url.shortUrl %>"
+							<a class="btn btn-primary" href="urls/url/<%= url.shortUrl %>"
 								>Edit</a
 							>
 						</td>
 						<td>
-							<form action="/delete/<%= url.shortUrl %>" method="POST">
+							<form action="urls/delete/<%= url.shortUrl %>" method="POST">
 								<button type="submit" class="btn btn-danger">Delete</button>
 							</form>
 						</td>

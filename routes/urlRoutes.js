@@ -8,14 +8,15 @@ const {
 	showNewUrl,
 	showSingleUrl,
 	editUrl,
-} = require("../controllers/urls");
+	shortedUrl,
+} = require("../controllers/urlController");
 
-router.post("/urls/new", postNewUrl);
-router.get("urls/new", showNewUrl);
-router.get("/urls", showUrls);
+router.post("/new", postNewUrl);
+router.get("/new", showNewUrl);
 router.get("/", showUrls);
 router.post("/delete/:id", deleteUrl);
 router.get("/url/:id", showSingleUrl);
 router.post("/url/:id", editUrl);
+router.get("/u/:id", shortedUrl);
 
 module.exports = router;
