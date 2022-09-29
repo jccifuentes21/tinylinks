@@ -4,6 +4,7 @@ const authRoutes = require("./routes/authRoutes");
 const urlRoutes = require("./routes/urlRoutes");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const port = process.env.PORT || 3003
 
 const app = express();
 app.use(morgan("dev"));
@@ -36,4 +37,4 @@ app.get("/", (req, res) => {
   }
 });
 
-app.listen(3000);
+app.listen(port);
